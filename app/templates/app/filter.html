@@ -1,0 +1,131 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+{% load socialaccount %}
+
+<html>
+    <head>
+        <title>UVA Off-Grounds Housing</title>
+    </head>
+
+<body>
+
+<nav class="navbar navbar-expand navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/app" style="color:#FF8C00">UVA Off-Grounds Housing</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/app">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:filter' %}">Filter</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:map' %}">Map</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:about' %}">About</a>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+            <li class="nav-link" style="float: right;">User: {{ user.username }}</li>
+            <a href="{% url 'app:logout' %}">{% load static %}
+                <img src="{% static 'media/google-logout.png' %}" alt="home" height="50"></a>
+        {% else %}
+            <a href="{% provider_login_url 'google' %}">
+            <img 
+                src="https://onymos.com/wp-content/uploads/2020/10/google-signin-button-1024x260.png" 
+                height="50"
+            >
+            </a>
+        {% endif %}
+        </div>
+    </div>
+</nav>
+
+<br>
+
+<br>
+<div class="row" style="position:relative; top: -40px; padding-left: 0.5in; padding-right: 0.5in;">
+	<div class="col">
+		<center><div class="card card-body">
+            
+			<form method="get" style="font-size: 15;">
+                {{otherFilter.form}}
+				{{style_filter.form}}
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
+
+		</div></center>
+	</div>
+	
+</div>
+
+<div class="row" style="position:relative; top: -30; padding-left: 0.5in; padding-right: 0.5in;">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+             
+				{% for x in housings %}
+                    {% for y in style_qs %}
+                        {% if y.name.name == x.name %}
+				<tr>
+                    <div class="card mb-4">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="{{ x.image.url }}" style="height: 220px; 
+                                width: 100%; padding: 10px;" />
+                            </div>
+                            <div class="col-md-5">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{% url 'app:property' x.name %}" 
+                                        style="color: rgb(8, 11, 133);">{{x.name}}</a></h5>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            Building Type: {{x.housing_type}}
+                                        </li>
+                                        <li class="list-group-item">Address: {{x.address}}</li>
+                                        <li class="list-group-item">
+                                            Monthly Rent($): {{y.rent}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="padding-top: 32px;">
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">People: 
+                                            {{y.people}}</li>
+                                        <li class="list-group-item">Bedrooms: 
+                                            {{y.beds}}</li>
+                                        <li class="list-group-item">Bathrooms: 
+                                            {{y.baths}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+
+<div style="position: relative; bottom: 0%; width: 100%;">
+    <footer class="text-center bg-light">
+      <div class="text-center p-2" style="font-size: 14; background-color: rgba(0, 0, 0, 0.05);">
+        © 2021 Copyright: Students in project b-13 in CS 3240: Advanced Software Development Techniques. 
+        University of Virginia.
+      </div>
+    </footer>
+</div>
+
+</body>
+</html>

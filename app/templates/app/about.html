@@ -1,0 +1,146 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+{% load socialaccount %}
+<html>
+    <head>
+        <title>UVA Off-Grounds Housing</title>
+    </head>
+<body>
+<!-- <h1>My Google OAuth Project </h1> -->
+
+<nav class="navbar navbar-expand navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/app" style="color:#FF8C00">UVA Off-Grounds Housing</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/app">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:filter' %}">Filter</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:map' %}">Map</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:about' %}">About</a>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+            <li class="nav-link" style="float: right;">User: {{ user.username }}</li>
+            <a href="{% url 'app:logout' %}">{% load static %}<img src="{% static 'media/google-logout.png' %}" alt="home" height="50"></a>
+        {% else %}
+            <a href="{% provider_login_url 'google' %}">
+            <img 
+                src="https://onymos.com/wp-content/uploads/2020/10/google-signin-button-1024x260.png" 
+                height="50"
+            >
+            </a>
+        {% endif %}
+        </div>
+    </div>
+</nav>
+
+<h1 style="color: rgb(8, 11, 133); padding-left: 0.1in;">About This Project</h1>
+<div class="col-sm-12" style="padding-left: 1%; padding-right: 1%;">
+    <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">CS 3240 - Fall 2021</h5>
+        <p class="card-text">The application is created by 5 undergraduate students for CS 3240: 
+            Advanced Software Development Techniques in fall 2021 at the University of Virginia. 
+            It allowers users to search, filter, find, and leave comments/ratings about off-grounds 
+            housing for the university. This is a semester long project and the software uses Django, 
+            Python, Bootstrap, Heroku, and other API services.
+
+            If you want to learn
+            more about us, please refer to our personal links below.
+        </p>
+        <a href="http://cs3240.cs.virginia.edu/" class="card-link">
+            About this course</a>
+        </div>
+    </div>
+</div>
+
+<h1 style="color: rgb(8, 11, 133); padding-left: 0.1in;padding-top: 0.1in;">Team</h1>
+<div class="container-fluid">
+    <div class="row">
+    <div class="col-sm-2">
+        <div class="card" style="width: 14rem; height: 15rem;">
+            <div class="card-body">
+            <h5 class="card-title">Chloe Smith</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Scrum Master</h6>
+            <a href="https://github.com/chloeSmitth" class="card-link">GitHub</a>
+            <a href="https://www.linkedin.com/in/chloe-smith-733b05221/" class="card-link">LinkedIn</a>
+            <p class="card-text">
+                Hello, I am interested in software development, UX design, cybersecurtity, Machine Learning, etc.
+            </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="card" style="width: 14rem; height: 15rem;right: -45;">
+            <div class="card-body">
+            <h5 class="card-title">Vinny Peng</h5>
+            <h6 class="card-subtitle mb-2 text-muted">UX Designer</h6>
+            <a href="https://github.com/vinnypeng2000" class="card-link">GitHub</a>
+            <a href="https://www.linkedin.com/in/vinnypeng1116/" class="card-link">LinkedIn</a>
+            <p class="card-text">Hello, I am interested in software development, game
+                development, AI, HCI, etc.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="card" style="width: 14rem; height: 15rem;right: -90;">
+            <div class="card-body">
+            <h5 class="card-title">Katie Shewell</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Requirements Manager</h6>
+            <a href="https://github.com/katieshewell">GitHub</a>
+            <a href="https://www.linkedin.com/in/katherine-shewell-0497721b5/" class="card-link">LinkedIn</a>
+            <p class="card-text">
+                Hello, I am interested in data science and UX design!</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="card" style="width: 14rem; height: 15rem; right: -135;">
+            <div class="card-body">
+            <h5 class="card-title">King Shing Chau</h5>
+            <h6 class="card-subtitle mb-2 text-muted">DevOps Manager</h6>
+            <a href="#" class="card-link">GitHub</a>
+            <a href="#" class="card-link">LinkedIn</a>
+            <p class="card-text">
+                Hello, I am interested in game desing, game development, cybersecurity etc.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="card" style="width: 14rem; height: 15rem; right: -180;">
+            <div class="card-body">
+            <h5 class="card-title">Shiva Manandhar</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Testing Manager</h6>
+            <a href="#" class="card-link">GitHub</a>
+            <a href="#" class="card-link">LinkedIn</a>
+            <p class="card-text">
+                Hello, I am interested in software development, Machine Learning/AI, Hardware Design, etc.</p>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <br/>
+    <br/>
+
+<div style="position: fixed; bottom: 0%; width: 100%;">
+    <footer class="text-center bg-light">
+        <div class="text-center p-2" style="font-size: 14; background-color: rgba(0, 0, 0, 0.05);">
+        © 2021 Copyright: Students in project b-13 in CS 3240: Advanced Software Development Techniques. 
+        University of Virginia.
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>

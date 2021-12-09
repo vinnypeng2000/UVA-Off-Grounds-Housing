@@ -1,0 +1,224 @@
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+{% load socialaccount %}
+
+<html>
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-6191f87f8ee10034"></script>
+<head>
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <title>UVA Off-Grounds Housing</title>
+</head>   
+<body>
+
+<nav class="navbar navbar-expand navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/app" style="color:#FF8C00">UVA Off-Grounds Housing</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/app">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:filter' %}">Filter</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:map' %}">Map</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:about' %}">About</a>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+            <li class="nav-link" style="float: right;">User: {{ user.username }}</li>
+            <a href="{% url 'app:logout' %}">{% load static %}<img src="{% static 'media/google-logout.png' %}" alt="home" height="50"></a>
+        {% else %}
+            <a href="{% provider_login_url 'google' %}">
+            <img 
+                src="https://onymos.com/wp-content/uploads/2020/10/google-signin-button-1024x260.png" 
+                height="50"
+            >
+            </a>
+        {% endif %}
+        </div>
+    </div>
+</nav>
+
+<center><h1 style="color: rgb(8, 11, 133);">{{property.name}}</h1></center>
+
+<div class="container">
+<div class="row">
+<div id="carouselExampleIndicators" class="carousel slide col-md-6" 
+  data-bs-ride="carousel" >
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{{ pics.pic1.url }}" class="d-block w-100" style="height: 400; width: 300;">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ pics.pic2.url }}" class="d-block w-100" style="height: 400; width: 300;">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ pics.pic3.url }}" class="d-block w-100" style="height: 400; width: 300;">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<div class="col-md-6">
+  <div id='map' style='width: 100%; height: 100%;'></div>
+</div>
+
+</div></div>
+
+<div class="col-md-12" style="padding-top: 0.1in; padding-left: 0.6in; padding-right: 0.6in;">
+  <ul class="list-group">
+    {% if property.housing_type == 'Town_House' %}
+    <li class="list-group-item"><b>Type:</b> Town House</li>
+    {% endif %}
+    {% if property.housing_type != 'Town_House' %}
+    <li class="list-group-item"><b>Type:</b> {{property.housing_type}}</li>
+    {% endif %}
+    <li class="list-group-item"><b>Address:</b> {{property.address}}</li>
+    {% for i in amenities %}
+    <li class="list-group-item"><b>Amenities:</b> {{i.amenities}}</li>
+    <li class="list-group-item"><b>Utilities:</b> {{i.utilities}}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<br/>
+<center><h4 style="color: rgb(8, 11, 133);">All Floor Plans in This Property</h4></center>
+
+<div style="padding-left: 0.6in; padding-right: 0.6in;">
+<table class='table'>
+    <tr>
+    <th scope='col' width='25%'>People</th>
+    <th scope='col' width='25%'>Bedrooms</th>
+    <th scope='col' width='25%'>Bathrooms</th>
+    <th scope='col' width='25%'>Monthly Rent ($)</th>
+  </tr>
+  {% for i in detail %}
+  <tr>
+    <td>{{i.people}}</td>
+    <td>{{i.beds}}</td>
+    <td>{{i.baths}}</td>
+    <td>{{i.rent}}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12 card mb-4  mt-3 left  top">
+            <div class="card-body">
+              <h4 style="color: rgb(8, 11, 133);">Student Reviews for {{property.name}}</h4>
+              <br>
+              {% if avg_rating == 'None' %}
+              <p>No Reviews</p>
+              {% endif %}
+              {% if avg_rating != 'None' %}
+              <p>Overall Rating: {{ avg_rating }} / 5</p>
+              {% endif %}
+              <p>{{ reviews.count }} Review(s)</p>
+              
+              <table class='table'>
+                <tr>
+                <th scope='col' width='15%'>Time</th>
+                <th scope='col' width='15%'>Rating</th>
+                <th scope='col' width='60%'>Review</th>
+              </tr>
+              {% for x in reviews %}
+              <tr>
+                <td>{{ x.date_added }}</td>
+                <td>{{x.rating}} / 5 </td>
+                <td>{{ x.review | linebreaks }}</td>
+              </tr>
+              {% endfor %}
+              </table>
+            </div>
+          </div>
+          
+          
+          {% if user.is_authenticated %}
+          <div class="col-md-12 card mb-4  mt-3 ">
+            <div class="card-body" style='width: 100%; height: 500px;'>
+                {% if new_review %}
+                  <div class="alert alert-success" role="alert">
+                    Your comment is awaiting moderation
+                  </div>
+                  {% else %}
+                  <h4 style="color: rgb(8, 11, 133);">Leave a Review For {{property.name}} </h4>
+                  <form method="post" style="margin-top: 1.3em;">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary ">Submit</button>
+                  </form>
+                  {% endif %}
+              {% else %}
+                <div class="alert alert-success" role="alert">
+                  Only logged in users can leave reviews.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpdmFtYW4iLCJhIjoiY2t2cHZjOTY2MmlodzJvbXRuOXMzMTRpNiJ9.8mKcr3_Z1IcZMKpO3VRC6A';
+const map = new mapboxgl.Map({
+container: 'map', // container ID
+style: 'mapbox://styles/mapbox/streets-v11', // style URL
+center: [-78.5, 38.04], // starting position [lng, lat]
+zoom: 13 // starting zoom
+});
+
+
+var long ='{{ longet|safe }}';
+var lat ='{{ lateral|safe }}';
+
+var marker = new mapboxgl.Marker()              
+    .setLngLat([ long, lat])
+    //.setPopup(new mapboxl.Popup().setHTML("<p>{{address}}<p>"))
+    .addTo(map);
+
+
+</script>
+   
+</ul>
+
+
+
+
+<div style="position: relative; bottom: 0%; width: 100%;">
+  <footer class="text-center bg-light">
+    <div class="text-center p-2" style="font-size: 14; background-color: rgba(0, 0, 0, 0.05);">
+      © 2021 Copyright: Students in project b-13 in CS 3240: Advanced Software Development Techniques. 
+      University of Virginia.
+    </div>
+  </footer>
+</div>
+
+
+
+</body>
+</html>

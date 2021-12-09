@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE HTML>
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+{% load socialaccount %}
+{# Load the tag library #}
+{% load bootstrap5 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+<html>
+<head>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    <title>UVA Off-Grounds Housing</title>
+</head>
+
+<body>
+<!-- <h1>My Google OAuth Project </h1> -->
+
+<nav class="navbar navbar-expand navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/app" style="color:#FF8C00">UVA Off-Grounds Housing</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/app">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:filter' %}">Filter</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:map' %}">Map</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'app:about' %}">About</a>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+            <li class="nav-link" style="float: right;">User: {{ user.username }}</li>
+            <a href="{% url 'app:logout' %}">{% load static %}<img src="{% static 'media/google-logout.png' %}" alt="home" height="50"></a>
+        {% else %}
+            <a href="{% provider_login_url 'google' %}">
+            <img 
+                src="https://onymos.com/wp-content/uploads/2020/10/google-signin-button-1024x260.png" 
+                height="50"
+            >
+            </a>
+        {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div style="padding: 0.5ch;">
+    <center><h1 style="color: rgb(8, 11, 133);">Browse Housing</h1></center>
+    <center>
+        <div id='map' style='width: 90%; height: 460px;'></div>
+    </center>
+</div>
+<br>
+<br>
+<br>
+
+<script>
+mapboxgl.accessToken = '{{ mapbox_access_token }}';
+const map = new mapboxgl.Map({
+container: 'map', // container ID
+style: 'mapbox://styles/mapbox/streets-v11', // style URL
+center: [-78.504, 38.034], // starting position [lng, lat]
+zoom: 14 // starting zoom
+});
+
+console.log('{{housing}}');
+
+        var marker = new mapboxgl.Marker()
+              
+                .setLngLat([-78.504, 38.034])
+                .setPopup(new mapboxgl.Popup().setHTML("The Lawn"))
+                .addTo(map);
+        // 10th dairy apartment
+        var marker1 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.471545, 38.031071])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/10th%20and%20Dairy%20Apartments> 10th and Dairy Apartments </a> <p>Address: 400 10th St NW, Charlottesville, VA 22902 </p>"))
+              .addTo(map)
+        //flats
+        var marker2 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.493367, 38.031851])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/The%20Flats> The Flats </a> <p>Address: 852 W Main St, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        //grady
+        var marker3 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.496903, 38.040662])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/1409%20Grady%20Ave%20Apt%202> 1409 Grady Ave Apt 2 </a> <p>Address: 1409 Grady Avenue, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+
+        //Gordon ave
+        var marker4 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.500005, 38.040628])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/1701%20Gordon%20Avenue%20Apartments> 1701 Gordon Avenue Apartments </a> <p>Address: 1701 Gordon Ave, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        //Ash Apartments
+        var marker5 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.496262, 38.041409])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Ash%20Tree%20Apartments> Ash Tree Apartments </a> <p>Address: 617 Madison Avenue, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        //Carrett Apartments
+        var marker6 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.511567, 38.027074])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Carratt%20Apartments> Carratt Apartments </a> <p>Address: 1904 Jefferson Park Avenue, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        //    Carrollton Terrace
+        var marker7 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.509835, 38.027331])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Carrollton%20Terrace> Carrollton Terrace </a> <p>Address: 116 Carrollton Terrace, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        //    Grady Apartments
+        var marker8 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.497048, 38.040216])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/1409%20Grady%20Ave%20Apt%202> Grady Apartments </a> <p>Address: 1410 Grady Avenue, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        //    GrandMarc
+        var marker9 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.499568, 38.037343])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Grandmarc> Grandmarc </a> <p>Address: 301 15th St NW, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        // Jefferson Common Apartment
+        var marker10 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.507866, 38.030873])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Jefferson%20Commons%20Apartments> Jefferson Commons Apartments </a> <p><b>Address:</b> 1620 Jefferson Park Avenue, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+        // Jefferson Common Apartment
+        var marker11 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.507866, 38.030873])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Jefferson%20Commons%20Apartments> Jefferson Commons Apartments </a> <p><b>Address:</b> 1620 Jefferson Park Avenue, Charlottesville, VA 22903 </p>"))
+              .addTo(map)
+
+                // Lark on main
+        var marker12 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.495441, 38.032075])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Lark%20on%20Main> Lark on Main </a> <p><b>Address:</b> 1000 West Main Street, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+        // Oxford
+        var marker13 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.495157, 38.040958])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Oxford%20Hill%20Apartments> Oxford Hill Apartments </a> <p><b>Address:</b> 704 Madison Ave, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+        //Preston
+        var marker14 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.492926, 38.042419])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Preston%20Square%20Apartments> Preston Square Apartments </a> <p><b>Address:</b> 1111 Preston Avenue, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+        //Rugby
+        var marker14 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.500055, 38.042722])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Rugby%20McIntire%20Apartments> Rugby McIntire Apartments </a> <p><b>Address:</b> 611 Rugby Road, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+        //Barringer
+        var marker15 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.502702, 38.030982])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/The%20Barringer> The Barringer </a> <p><b>Address:</b> 428 Monroe Lane, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+        //Crossroads
+        var marker16 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.51452, 38.02629])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/The%20Crossroads> The Crossroads </a> <p><b>Address:</b> 2111 Jefferson Park Ave, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+        //Monroe
+        var marker17 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.503473, 38.030972])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/The%20Monroe> The Monroe </a> <p><b>Address:</b> 429 Monroe Lane Charlottesville, VA</p>"))
+              .addTo(map)
+         //Pavilions
+         var marker17 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.514514, 38.025766])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/The%20Pavilions> The Pavilions </a> <p><b>Address:</b> 2112 Jefferson Park Ave, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+        //Standard
+         var marker18 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.493353, 38.032715])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/The%20Standard> The Standard </a> <p><b>Address:</b> 853 West Main Street, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+
+        //Treehouse
+        var marker19 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.508626, 38.030817])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/The%20Tree%20House> The Tree House</a> <p><b>Address:</b> 1707 Jefferson Park Avenue, Charlottesville, VA</p>"))
+              .addTo(map)
+
+        //Veneable
+        var marker20 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.49757, 38.037913])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Venable%20Apartments> Venable Apartments</a> <p><b>Address:</b> 409 14th St NW, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+
+
+        //Wertlands
+        var marker21 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.498617, 38.035363])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Wertland%20Square%20Apartments> Wertland Square Apartments</a> <p><b>Address:</b> 216 14th Street, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+
+        //1100 Preston Avenue
+        var marker22 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.491938, 38.042003])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/1100%20Preston%20Avenue> 1100 Preston Avenue</a> <p><b>Address:</b> 1100 Preston Avenue, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+
+      //Minor Road
+      var marker23 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.512913, 38.039797])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/120%20Minor%20Road> 120 Minor Road</a> <p><b>Address:</b> 120 Minor Road, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+      //John Street
+      var marker24 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.496897, 38.037088])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/1305%20John%20Street> 1305 John Street</a> <p><b>Address:</b> 1305 John Street, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+
+      //463 14th St NW
+      var marker25 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.497367, 38.038812])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/463%2014th%20St%20NW> 463 14th St NW</a> <p><b>Address:</b> 463 14th St NW, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+
+     //463 14th St NW
+     var marker26 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.496212, 38.040509])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/605%2014th%20St%20NW> 605 14th St NW</a> <p><b>Address:</b> 605 14th St NW, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+    //Cabell Hall 
+    var marker27 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.496871, 38.041968])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/630%20Cabell%20Ave.%20Townhome> 630 Cabell Ave. Townhome</a> <p><b>Address:</b> 630 Cabell Ave, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+    //Maupin Townhomes 
+    var marker28 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.49253, 38.04243])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Maupin%20Townhomes> Maupin Townhomes</a> <p><b>Address:</b> 1237 Preston Ave, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+
+    //Wellington Court Townhome
+    var marker29 = new mapboxgl.Marker()
+              
+              .setLngLat([-78.496525, 38.036066])
+              .setPopup(new mapboxgl.Popup().setHTML("<a href=https://housingb13.herokuapp.com/app/filter/Wellington%20Court%20Townhome> Wellington Court Townhome</a> <p><b>Address:</b> 1122 John Street, Charlottesville, VA 22903</p>"))
+              .addTo(map)
+</script>
+
+    
+<div class="fixed-bottom">
+    <footer class="text-center bg-light">
+        <div class="text-center p-2" style="font-size: 14; background-color: rgba(0, 0, 0, 0.05);">
+        © 2021 Copyright: Students in project b-13 in CS 3240: Advanced Software Development Techniques. 
+        University of Virginia.
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
