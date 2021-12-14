@@ -12,6 +12,10 @@ import json
 from .filters import *
 from .models import *
 from .forms import CommentForm
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 # Home Page
@@ -88,7 +92,7 @@ class MapView(CreateView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
-        context['mapbox_access_token'] = 'pk.eyJ1Ijoic2hpdmFtYW4iLCJhIjoiY2t2cHZjOTY2MmlodzJvbXRuOXMzMTRpNiJ9.8mKcr3_Z1IcZMKpO3VRC6A'
+        context['mapbox_access_token'] = env('MAPBOX_TOKEN')
         #addresses = list(Housing.objects.values('lat', 'long'))
         addresses = list(Housing.objects.all())
         context['addresses'] = addresses
@@ -104,7 +108,7 @@ def map_housing(request):
         {
             'addresses': Housing.objects.all(),
             'mapbox_access_token':
-            'pk.eyJ1Ijoic2hpdmFtYW4iLCJhIjoiY2t2cHZjOTY2MmlodzJvbXRuOXMzMTRpNiJ9.8mKcr3_Z1IcZMKpO3VRC6A',
+            env("MAPBOX_TOKEN"),
             'housing': Housing})
 
 

@@ -9,10 +9,13 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import environ
 from pathlib import Path
 import os
 import sys
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,14 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@lhuh^slq(vrspu!%p36c$w^(ua)#wv!9bmn3t_^#2_o@pl6$#'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['housingb13.herokuapp.com', '127.0.0.1']
 
-SECURE_SSL_REDIRECT = True
+# SECURE_SSL_REDIRECT = True
 
 # Application definition
 
@@ -91,28 +94,28 @@ WSGI_APPLICATION = 'Housing.wsgi.application'
 if 'test' in sys.argv:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'daociq5u318h8u',
-            'USER': 'lcjahsgybbhtrk',
-            'PASSWORD': '621f7e22c87d400ee657d7eb221655969bc5d30bd3d14f18779a3064e0b2e9e1',
-            'HOST': 'ec2-34-228-154-153.compute-1.amazonaws.com',
+            'ENGINE': env('ENGINE'),
+            'NAME': env('TEST_NAME'),
+            'USER': env('TEST_USER'),
+            'PASSWORD': env('TEST_PASSWORD'),
+            'HOST': env('TEST_HOST'),
             'PORT': '5432',
             'TEST': {
-                'NAME': 'daociq5u318h8u',
+                'NAME': env('TEST_NAME'),
             }
         }
     }
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'dcb9p3ae5g6lbq',
-            'USER': 'rgqwtbxxkzqewp',
-            'PASSWORD': 'e5b9641a3291947ad5be78389a77b30fa4687e1002b6b81551e8cc35c901dd56',
-            'HOST': 'ec2-54-89-105-122.compute-1.amazonaws.com',
+            'ENGINE': env('ENGINE'),
+            'NAME': env('NAME'),
+            'USER': env('USER'),
+            'PASSWORD': env('PASSWORD'),
+            'HOST': env('HOST'),
             'PORT': '5432',
             'TEST': {
-                'NAME': 'dcb9p3ae5g6lbq',
+                'NAME': env('NAME'),
             }
             # 'ENGINE': 'django.db.backends.sqlite3',
             # 'NAME': BASE_DIR / 'db.sqlite3',
